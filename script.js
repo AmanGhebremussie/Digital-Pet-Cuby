@@ -1,16 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Scrollen und Verschieben auf allen Geräten verhindern
-    window.scrollTo(0, 0);
-    window.addEventListener('scroll', function() {
-        window.scrollTo(0, 0);
-    });
-    document.body.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-    }, { passive: false });
-    document.body.addEventListener('wheel', function(e) {
-        e.preventDefault();
-    }, { passive: false });
-
     const pet = document.querySelector('.pet');
     const sleepBtn = document.querySelector('.sleep-btn');
     const wakeBtn = document.querySelector('.wake-btn');
@@ -518,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetNightmareTimer();
     }, {passive: true});
 
-    // Augen folgen dem Finger auf Touch-Geräten (nur wach)
+    // Augen folgen dem Finger auf Touch-Geräten (nur wenn wach)
     document.addEventListener('touchmove', function(e) {
         if (isSleeping || isNightmare) return;
         if (!e.touches || e.touches.length === 0) return;
