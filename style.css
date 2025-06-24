@@ -343,12 +343,30 @@ body {
     transition: all 0.7s cubic-bezier(.77,0,.18,1);
 }
 
-.pet.idle .eye,
-.pet.tired .eye,
-.pet.sleeping .eye,
-.pet.nightmare .eye {
-    width: 35px;
-    height: 70px;
+.pet.tired .mouth {
+    height: 6px;
+    width: 80px;
+    border-radius: 0px;
+    background: #747474;
+    border-bottom: none;
+    border-top: none;
+    transition: all 0.7s cubic-bezier(.77,0,.18,1);
+    bottom: 40px;
+}
+
+.pet.tired .eye::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: #d0d0d0;
+    border-radius: 5% 5% 0 0 / 5% 5% 0 0;
+    pointer-events: none;
+    z-index: 3;
+    transition: height 0.5s cubic-bezier(.77,0,.18,1);
+    
 }
 
 @keyframes mouth-breathing {
@@ -389,32 +407,6 @@ body {
     transition: all 0.5s ease !important;
     bottom: 28px !important;
 }
-
-.pet.tired .mouth {
-    height: 6px;
-    width: 80px;
-    border-radius: 0px;
-    background: #747474;
-    border-bottom: none;
-    border-top: none;
-    transition: all 0.7s cubic-bezier(.77,0,.18,1);
-}
-
-.pet.tired .eye::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 40%;
-    background: #d0d0d0;
-    border-radius: 5% 5% 0 0 / 5% 5% 0 0;
-    pointer-events: none;
-    z-index: 3;
-    transition: height 0.5s cubic-bezier(.77,0,.18,1);
-    
-}
-
 
 @media (max-width: 600px) {
   html, body {
