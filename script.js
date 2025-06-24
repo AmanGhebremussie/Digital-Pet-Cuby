@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let interactionCount = 0;
     const MAX_INTERACTIONS = 5;
     let tiredTimeout = null;
-    let sleepVibrationInterval = null;
+
 
     // Globale Variablen für Albtraum-Fortschritt
     let progress = 0;
@@ -113,13 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sleepBtn.style.display = 'none';
         wakeBtn.style.display = 'flex';
 
-        // Vibration im Schlafmodus NICHT mehr per Intervall starten
-        // if (window.navigator.vibrate) {
-        //     sleepVibrationInterval = setInterval(() => {
-        //         window.navigator.vibrate([60, 200, 60]);
-        //     }, 4000); // alle 4 Sekunden
-        // }
-
         // Stoppe lebendige Animationen
         if (idleTimer) {
             clearInterval(idleTimer);
@@ -145,12 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pet.classList.remove('sleeping');
         pet.classList.remove('nightmare');
         wakeBtn.style.display = 'none';
-        // Vibration im Schlafmodus stoppen (nicht mehr nötig, da kein Intervall)
-        // if (sleepVibrationInterval) {
-        //     clearInterval(sleepVibrationInterval);
-        //     sleepVibrationInterval = null;
-        // }
-        // Zähler zurücksetzen & wieder auf Anfangszustand
         clickCount = 0;
         interactionCount = 0;
 
@@ -172,11 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Albtraum-Timer starten
     function startNightmareTimer() {
+        // Zufällige Zeit zwischen 8 und 30 Sekunden (8000 - 30000 ms)
+        const randomTime = 8000 + Math.random() * 22000;
         nightmareTimer = setTimeout(() => {
             if (isSleeping && !isNightmare) {
                 startNightmare();
             }
-        }, 10000); // 10 Sekunden
+        }, randomTime);
     }
 
     // Albtraum-Timer zurücksetzen
@@ -193,6 +182,59 @@ document.addEventListener('DOMContentLoaded', () => {
         pet.classList.add('nightmare');
         clearTimeout(smileTimeout); // Lächel-Timeout abbrechen
         setMouthAngst(); // Mund sofort ängstlich
+        
+        // Albtraum-Sound abspielen
+        const nightmareAudio = new Audio('Marcello Del Monaco - Horror Genre Collection - Scary Atmosphere 01.wav');
+        nightmareAudio.loop = true;
+        nightmareAudio.volume = 0.5;
+        nightmareAudio.playbackRate = 1;
+        nightmareAudio.play().catch(e => console.log('Sound konnte nicht abgespielt werden:', e));
+        // Speichere das Audio-Objekt global, damit es gestoppt werden kann
+        window.nightmareAudio = nightmareAudio;
+        // Timer für schnelleren Sound, wenn keine Interaktion
+        let nightmareSpeedTimeout = null;
+        function setNightmareSpeedFast() {
+            if (window.nightmareAudio) {
+                window.nightmareAudio.playbackRate = 1.5;
+                window.nightmareAudio.volume = 1.0;
+            }
+        }
+        function setNightmareSpeedNormal() {
+            if (window.nightmareAudio) {
+                window.nightmareAudio.playbackRate = 1;
+                window.nightmareAudio.volume = 0.5;
+            }
+        }
+        function resetNightmareSpeedTimer() {
+            clearTimeout(nightmareSpeedTimeout);
+            setNightmareSpeedNormal();
+            nightmareSpeedTimeout = setTimeout(() => {
+                setNightmareSpeedFast();
+            }, 2000); // Nach 2 Sekunden ohne Interaktion schneller
+        }
+        // Bei jeder Interaktion im Albtraum-Modus Timer zurücksetzen
+        const nightmareInteractionEvents = ['mousedown', 'mousemove', 'touchmove'];
+        nightmareInteractionEvents.forEach(eventType => {
+            pet.addEventListener(eventType, function nightmareSpeedHandler() {
+                if (isNightmare) {
+                    // Musik langsamer und leiser machen
+                    if (window.nightmareAudio) {
+                        window.nightmareAudio.playbackRate = 0.7;
+                        // Lautstärke schrittweise verringern, aber nicht unter 0.1
+                        if (window.nightmareAudio.volume > 0.11) {
+                            window.nightmareAudio.volume -= 0.1;
+                        } else {
+                            window.nightmareAudio.volume = 0.1;
+                        }
+                    }
+                    resetNightmareSpeedTimer();
+                }
+            });
+        });
+        // Timer beim Start setzen
+        resetNightmareSpeedTimer();
+        // Speichere Timeout für späteres Entfernen
+        window.nightmareSpeedTimeout = nightmareSpeedTimeout;
         
         // Wake-Button verstecken
         wakeBtn.style.display = 'none';
@@ -286,6 +328,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (progressBar) {
                     progressBar.remove();
                 }
+                // Albtraum-Sound stoppen
+                if (window.nightmareAudio) {
+                    // Fade-Out Effekt
+                    const fadeOutInterval = setInterval(() => {
+                        if (!window.nightmareAudio) {
+                            clearInterval(fadeOutInterval);
+                            return;
+                        }
+                        if (window.nightmareAudio.volume > 0.05) {
+                            window.nightmareAudio.volume -= 0.05;
+                        } else {
+                            window.nightmareAudio.volume = 0;
+                            window.nightmareAudio.pause();
+                            window.nightmareAudio.currentTime = 0;
+                            window.nightmareAudio = null;
+                            clearInterval(fadeOutInterval);
+                        }
+                    }, 50);
+                }
+                // Speed-Timer aufräumen
+                if (window.nightmareSpeedTimeout) {
+                    clearTimeout(window.nightmareSpeedTimeout);
+                    window.nightmareSpeedTimeout = null;
+                }
                 // Wake-Button wieder anzeigen
                 wakeBtn.style.display = 'flex';
                 // Mund zurück zum neutralen Schlafzustand
@@ -294,8 +360,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 pet.removeEventListener('mousedown', increaseProgress);
                 pet.removeEventListener('mousemove', increaseProgress);
                 pet.removeEventListener('touchmove', increaseProgress);
-                // Albtraum-Timer neu starten für nächsten Albtraum
-                startNightmareTimer();
+                // Albtraum-Timer neu starten für nächsten Albtraum erst nach Cooldown
+                const nightmareCooldown = 40000; // 40 Sekunden Cooldown
+                setTimeout(() => {
+                    startNightmareTimer();
+                }, nightmareCooldown);
                 // Sterne wieder erstellen
                 createStars();
             }
@@ -506,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetNightmareTimer();
     }, {passive: true});
 
-    // Augen folgen dem Finger auf Touch-Geräten (nur wenn wach)
+    // Augen folgen dem Finger auf Touch-Geräten (nur wach)
     document.addEventListener('touchmove', function(e) {
         if (isSleeping || isNightmare) return;
         if (!e.touches || e.touches.length === 0) return;
