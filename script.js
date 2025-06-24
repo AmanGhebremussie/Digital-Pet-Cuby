@@ -113,6 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
         sleepBtn.style.display = 'none';
         wakeBtn.style.display = 'flex';
 
+        // Herzschlag-Sound im Loop abspielen
+        const heartbeatAudio = new Audio('heartbeat-sound-effect-111218.mp3');
+        heartbeatAudio.loop = true;
+        heartbeatAudio.volume = 0.2;
+        heartbeatAudio.playbackRate = 0.5;
+        heartbeatAudio.play().catch(e => {});
+        window.heartbeatAudio = heartbeatAudio;
+
         // Stoppe lebendige Animationen
         if (idleTimer) {
             clearInterval(idleTimer);
@@ -140,6 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
         wakeBtn.style.display = 'none';
         clickCount = 0;
         interactionCount = 0;
+
+        // Herzschlag-Sound stoppen
+        if (window.heartbeatAudio) {
+            window.heartbeatAudio.pause();
+            window.heartbeatAudio.currentTime = 0;
+            window.heartbeatAudio = null;
+        }
 
         // Pet wacht auf (Augen auf)
         pet.querySelectorAll('.pupil').forEach(p => p.style.opacity = 1);
@@ -182,6 +197,11 @@ document.addEventListener('DOMContentLoaded', () => {
         pet.classList.add('nightmare');
         clearTimeout(smileTimeout); // Lächel-Timeout abbrechen
         setMouthAngst(); // Mund sofort ängstlich
+        
+        // Herzschlag-Sound schneller abspielen
+        if (window.heartbeatAudio) {
+            window.heartbeatAudio.playbackRate = 1.5;
+        }
         
         // Albtraum-Sound abspielen
         const nightmareAudio = new Audio('Marcello Del Monaco - Horror Genre Collection - Scary Atmosphere 01.wav');
@@ -327,6 +347,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progressBar = document.querySelector('.nightmare-progress');
                 if (progressBar) {
                     progressBar.remove();
+                }
+                // Herzschlag-Sound wieder langsam abspielen
+                if (window.heartbeatAudio) {
+                    window.heartbeatAudio.playbackRate = 0.5;
                 }
                 // Albtraum-Sound stoppen
                 if (window.nightmareAudio) {
