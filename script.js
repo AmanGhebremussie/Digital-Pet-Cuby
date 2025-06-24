@@ -113,12 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
         sleepBtn.style.display = 'none';
         wakeBtn.style.display = 'flex';
 
-        // Vibration im Schlafmodus starten
-        if (window.navigator.vibrate) {
-            sleepVibrationInterval = setInterval(() => {
-                window.navigator.vibrate([60, 200, 60]);
-            }, 4000); // alle 4 Sekunden
-        }
+        // Vibration im Schlafmodus NICHT mehr per Intervall starten
+        // if (window.navigator.vibrate) {
+        //     sleepVibrationInterval = setInterval(() => {
+        //         window.navigator.vibrate([60, 200, 60]);
+        //     }, 4000); // alle 4 Sekunden
+        // }
 
         // Stoppe lebendige Animationen
         if (idleTimer) {
@@ -145,11 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
         pet.classList.remove('sleeping');
         pet.classList.remove('nightmare');
         wakeBtn.style.display = 'none';
-        // Vibration im Schlafmodus stoppen
-        if (sleepVibrationInterval) {
-            clearInterval(sleepVibrationInterval);
-            sleepVibrationInterval = null;
-        }
+        // Vibration im Schlafmodus stoppen (nicht mehr nötig, da kein Intervall)
+        // if (sleepVibrationInterval) {
+        //     clearInterval(sleepVibrationInterval);
+        //     sleepVibrationInterval = null;
+        // }
         // Zähler zurücksetzen & wieder auf Anfangszustand
         clickCount = 0;
         interactionCount = 0;
@@ -527,4 +527,18 @@ document.addEventListener('DOMContentLoaded', () => {
             pupil.style.transition = `transform ${transitionTime} ease-out`;
         });
     }, {passive: true});
+
+    // Vibration bei Klick auf Cuby im Schlafmodus
+    pet.addEventListener('click', function () {
+        if (isSleeping && window.navigator.vibrate) {
+            window.navigator.vibrate([60, 200, 60]);
+        }
+    });
+
+    // Vibration bei Touch auf Cuby im Schlafmodus
+    pet.addEventListener('touchstart', function () {
+        if (isSleeping && window.navigator.vibrate) {
+            window.navigator.vibrate([60, 200, 60]);
+        }
+    });
 });
