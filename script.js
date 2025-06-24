@@ -505,4 +505,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
         resetNightmareTimer();
     }, {passive: true});
+
+    // Augen folgen dem Finger auf Touch-Geräten (nur wenn wach)
+    document.addEventListener('touchmove', function(e) {
+        if (isSleeping || isNightmare) return;
+        if (!e.touches || e.touches.length === 0) return;
+        const touch = e.touches[0];
+        const pupils = document.querySelectorAll('.pupil');
+        const petRect = pet.getBoundingClientRect();
+        const petCenterX = petRect.left + petRect.width / 2;
+        const petCenterY = petRect.top + petRect.height / 2;
+        const deltaX = touch.clientX - petCenterX;
+        const deltaY = touch.clientY - petCenterY;
+        const maxMoveX = 8;
+        const maxMoveY = 12;
+        const moveX = Math.max(-maxMoveX, Math.min(maxMoveX, deltaX * 0.2));
+        const moveY = Math.max(-maxMoveY, Math.min(maxMoveY, deltaY * 0.25));
+        let transitionTime = pet.classList.contains('tired') ? '1.5s' : '0.2s';
+        pupils.forEach(pupil => {
+            pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            pupil.style.transition = `transform ${transitionTime} ease-out`;
+        });
+    }, {passive: true});
 });
