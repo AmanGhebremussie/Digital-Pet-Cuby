@@ -412,7 +412,9 @@ body {
     pointer-events: none;
     z-index: 3;
     transition: height 0.5s cubic-bezier(.77,0,.18,1);
+    
 }
+
 
 @media (max-width: 600px) {
   html, body {
@@ -520,10 +522,6 @@ body {
   .star, .star1, .star2 {
     font-size: 24px;
   }
-  .pet.sleeping .eye,
-  .pet.nightmare .eye {
-    height: 48px;
-    width: 24px;
-  }
+ 
 }
 
