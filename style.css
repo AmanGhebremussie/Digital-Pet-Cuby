@@ -1,18 +1,37 @@
+html, body {
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    touch-action: none;
+}
+
 body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .container {
     position: relative;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
-
 
 .pet {
     width: 200px;
@@ -31,7 +50,6 @@ body {
     animation: gentle-breathing 4s ease-in-out infinite;
 }
 
-
 .eyes {
     position: absolute;
     top: 20%;
@@ -48,7 +66,6 @@ body {
     position: relative;
     overflow: hidden;
 }
-
 
 .pupil {
     width: 20px;
@@ -84,7 +101,6 @@ body {
     transition: all 0.7s cubic-bezier(.77,0,.18,1);
 }
 
-
 .heart {
     position: absolute;
     left: 50%;
@@ -97,7 +113,7 @@ body {
     z-index: 20;
 }
 
-  @keyframes float-heart {
+@keyframes float-heart {
     0% {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
@@ -110,7 +126,7 @@ body {
       opacity: 0;
       transform: translate(-50%, -220%) scale(0.8);
     }
-  }
+}
     
 .sleep-btn, .wake-btn {
       width: 70px;
@@ -399,20 +415,29 @@ body {
 }
 
 @media (max-width: 600px) {
-  body {
-    min-height: 100vh;
+  html, body {
+    width: 100vw;
     height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    touch-action: none;
+  }
+  body {
+    min-height: 100dvh;
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
   }
   .container {
     width: 100vw;
-    min-height: 100vh;
+    height: 100dvh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;

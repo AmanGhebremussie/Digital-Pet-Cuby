@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetNightmareTimer();
     }, {passive: true});
 
-    // Augen folgen dem Finger auf Touch-Geräten (nur wach)
+    // Augen folgen dem Finger auf Touch-Geräten (nur wenn wach)
     document.addEventListener('touchmove', function(e) {
         if (isSleeping || isNightmare) return;
         if (!e.touches || e.touches.length === 0) return;
@@ -527,10 +527,4 @@ document.addEventListener('DOMContentLoaded', () => {
             pupil.style.transition = `transform ${transitionTime} ease-out`;
         });
     }, {passive: true});
-
-    // Scrollen auf Mobilgeräten verhindern, solange Cuby angezeigt wird
-    document.addEventListener('touchmove', function(e) {
-        // Nur verhindern, wenn Cuby sichtbar ist (immer in dieser App)
-        e.preventDefault();
-    }, {passive: false});
 });
