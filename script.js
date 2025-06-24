@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pet = document.querySelector('.pet');
     const sleepBtn = document.querySelector('.sleep-btn');
     const wakeBtn = document.querySelector('.wake-btn');
-    let clickCount = 0;
     let isSleeping = false;
     let isDragging = false;
     let lastX = null;
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let idleTimer = null;
     let idleTimeout = null;
     let interactionCount = 0;
-    const MAX_INTERACTIONS = 15;
+    const MAX_INTERACTIONS = 20;
     let tiredTimeout = null;
 
 
@@ -41,10 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         interactionCount++;
         if (interactionCount >= MAX_INTERACTIONS) {
             setTiredFace();
-        }
-        clickCount++;
-        if (clickCount === 5) {
-            sleepBtn.style.display = 'flex';
         }
     });
 
@@ -147,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pet.classList.remove('nightmare');
         wakeBtn.style.display = 'none';
         sleepBtn.style.display = 'flex';
-        clickCount = 0;
         interactionCount = 0;
 
         // Herzschlag-Sound stoppen
@@ -169,8 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Lebendige Animationen wieder starten
         startIdleAnimations();
-
-        // Sleep-Button bleibt unsichtbar bis zu 5 Klicks
     });
 
     // Albtraum-Timer starten
