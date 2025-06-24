@@ -528,14 +528,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, {passive: true});
 
-    // Vibration bei Klick auf Cuby im Schlafmodus
+    // Vibration bei Klick auf Cuby im Schlafmodus direkt im Handler
     pet.addEventListener('click', function () {
         if (isSleeping && window.navigator.vibrate) {
             window.navigator.vibrate([60, 200, 60]);
         }
     });
 
-    // Vibration bei Touch auf Cuby im Schlafmodus
+    // Vibration bei Touch auf Cuby im Schlafmodus direkt im Handler
     pet.addEventListener('touchstart', function () {
         if (isSleeping && window.navigator.vibrate) {
             window.navigator.vibrate([60, 200, 60]);
