@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let tiredTimeout = null;
     let sleepVibrationInterval = null;
 
+    // Globale Variablen für Albtraum-Fortschritt
+    let progress = 0;
+    let maxProgress = 100;
+    let progressFill = null;
+    let stopNightmare = null;
+
     pet.addEventListener('click', function () {
         if (isSleeping || isNightmare) return;
         
@@ -220,10 +226,10 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.querySelector('.pet-buttons').appendChild(progressBar);
         
-        // Fortschrittsvariablen
-        let progress = 0;
-        const maxProgress = 100;
-        const progressFill = progressBar.querySelector('.progress-fill');
+        // Fortschrittsvariablen global setzen
+        progress = 0;
+        maxProgress = 100;
+        progressFill = progressBar.querySelector('.progress-fill');
 
         // Mund zu einem besorgten Ausdruck ändern
         const mouth = document.querySelector('.mouth');
@@ -261,53 +267,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
 
         // Fortschritt durch Streicheln langsam erhöhen
-        const increaseProgress = () => {
-            if (isNightmare) {
-                progress += 0.5; // 0.5% pro Interaktion (viel langsamer)
-                if (progress > maxProgress) progress = maxProgress;
-                
-                progressFill.style.width = `${progress}%`;
-                
-                // Wenn vollständig gefüllt, zurück zum normalen Schlafmodus
-                if (progress >= maxProgress) {
-                    stopNightmare();
-                }
-            }
-        };
-
-        // Albtraum beenden und zurück zum Schlafmodus
-        const stopNightmare = () => {
+        stopNightmare = function() {
             if (isNightmare) {
                 isNightmare = false;
                 pet.classList.remove('nightmare');
                 clearInterval(flashInterval);
                 document.body.style.background = 'black';
-                
+                // Mund-Styles zurücksetzen, damit CSS-Animation greift
+                const mouth = document.querySelector('.mouth');
+                mouth.removeAttribute('style');
                 // Hintergrundbild entfernen
                 const nightmareBg = document.querySelector('.nightmare-background');
                 if (nightmareBg) {
                     nightmareBg.remove();
                 }
-                
                 // Fortschrittsbalken entfernen
                 const progressBar = document.querySelector('.nightmare-progress');
                 if (progressBar) {
                     progressBar.remove();
                 }
-                
                 // Wake-Button wieder anzeigen
                 wakeBtn.style.display = 'flex';
-                
                 // Mund zurück zum neutralen Schlafzustand
                 setMouthNeutral();
-                
                 // Event-Listener entfernen
                 pet.removeEventListener('mousedown', increaseProgress);
                 pet.removeEventListener('mousemove', increaseProgress);
-                
+                pet.removeEventListener('touchmove', increaseProgress);
                 // Albtraum-Timer neu starten für nächsten Albtraum
                 startNightmareTimer();
-                
                 // Sterne wieder erstellen
                 createStars();
             }
@@ -315,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         pet.addEventListener('mousedown', increaseProgress);
         pet.addEventListener('mousemove', increaseProgress);
+        pet.addEventListener('touchmove', increaseProgress);
     }
 
     // Hilfsfunktion: Mund neutral (gerade Linie)
@@ -493,4 +482,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof increaseProgress === 'function') increaseProgress();
         }
     }, {passive: true});
+
+    function increaseProgress() {
+        if (isNightmare && progressFill) {
+            progress += 0.5; // 0.5% pro Interaktion (viel langsamer)
+            if (progress > maxProgress) progress = maxProgress;
+            progressFill.style.width = `${progress}%`;
+            if (progress >= maxProgress && typeof stopNightmare === 'function') {
+                stopNightmare();
+            }
+        }
+    }
 });

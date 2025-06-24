@@ -450,12 +450,13 @@ body {
   .mouth {
     width: 56px;
     height: 14px;
-    bottom: 28px;
+    bottom: 18px;
     border-bottom-width: 2px;
   }
   .pet.sleeping .mouth,
   .pet.nightmare .mouth {
     bottom: 18px;
+    
   }
   .pet-buttons {
     position: fixed;
