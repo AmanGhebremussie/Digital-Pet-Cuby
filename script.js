@@ -493,4 +493,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    // Touch-Event für Streicheln im Schlafmodus (wie mousemove)
+    pet.addEventListener('touchmove', function (e) {
+        if (!isSleeping) return;
+        if (isNightmare) return; // Kein Lächeln im Albtraummodus
+        setMouthStandard(); // Sofort glücklich
+        clearTimeout(smileTimeout);
+        smileTimeout = setTimeout(() => {
+            setMouthNeutral(); // Nach 1 Sekunde neutral
+        }, 1000);
+        resetNightmareTimer();
+    }, {passive: true});
 });
