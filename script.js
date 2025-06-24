@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let idleTimer = null;
     let idleTimeout = null;
     let interactionCount = 0;
-    const MAX_INTERACTIONS = 5;
+    const MAX_INTERACTIONS = 15;
     let tiredTimeout = null;
 
 
