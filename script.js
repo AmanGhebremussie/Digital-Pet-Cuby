@@ -26,10 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     pet.addEventListener('click', function () {
         if (isSleeping || isNightmare) return;
         
-        // Vibrationsfeedback bei Klick im Anfangsmodus
-        if (window.navigator.vibrate) {
-            window.navigator.vibrate(80);
-        }
         // Sound abspielen
         const popSound = new Audio('beep-6-96243.mp3');
         popSound.volume = 0.3; // Lautstärke auf 30% setzen
@@ -117,7 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
         sleepBtn.style.display = 'none';
         wakeBtn.style.display = 'flex';
 
-        // Vibration im Schlafmodus entfernt
+        // Vibration im Schlafmodus starten
+        if (window.navigator.vibrate) {
+            sleepVibrationInterval = setInterval(() => {
+                window.navigator.vibrate([60, 200, 60]);
+            }, 4000); // alle 4 Sekunden
+        }
 
         // Stoppe lebendige Animationen
         if (idleTimer) {
@@ -144,7 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
         pet.classList.remove('sleeping');
         pet.classList.remove('nightmare');
         wakeBtn.style.display = 'none';
-        // Vibration im Schlafmodus entfernt
+        // Vibration im Schlafmodus stoppen
+        if (sleepVibrationInterval) {
+            clearInterval(sleepVibrationInterval);
+            sleepVibrationInterval = null;
+        }
         // Zähler zurücksetzen & wieder auf Anfangszustand
         clickCount = 0;
         interactionCount = 0;
