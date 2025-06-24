@@ -408,6 +408,10 @@ body {
     bottom: 28px !important;
 }
 
+.wake-btn {
+    display: none;
+}
+
 @media (max-width: 600px) {
   html, body {
     width: 100vw;

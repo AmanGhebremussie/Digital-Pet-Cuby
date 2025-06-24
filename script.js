@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pet.classList.remove('sleeping');
         pet.classList.remove('nightmare');
         wakeBtn.style.display = 'none';
+        sleepBtn.style.display = 'flex';
         clickCount = 0;
         interactionCount = 0;
 
