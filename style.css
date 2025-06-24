@@ -328,9 +328,11 @@ body {
 }
 
 .pet.idle .eye,
-.pet.tired .eye {
-    width: 24px;
-    height: 48px;
+.pet.tired .eye,
+.pet.sleeping .eye,
+.pet.nightmare .eye {
+    width: 35px;
+    height: 70px;
 }
 
 @keyframes mouth-breathing {
@@ -430,7 +432,11 @@ body {
     display: flex;
     justify-content: space-around;
   }
-  .eye {
+  .eye,
+  .pet.idle .eye,
+  .pet.tired .eye,
+  .pet.sleeping .eye,
+  .pet.nightmare .eye {
     width: 24px;
     height: 48px;
     border-radius: 5%;

@@ -185,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function startNightmare() {
         isNightmare = true;
         pet.classList.add('nightmare');
+        clearTimeout(smileTimeout); // Lächel-Timeout abbrechen
+        setMouthAngst(); // Mund sofort ängstlich
         
         // Wake-Button verstecken
         wakeBtn.style.display = 'none';
@@ -317,6 +319,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hilfsfunktion: Mund neutral (gerade Linie)
     function setMouthNeutral() {
+        if (isNightmare) {
+            setMouthAngst();
+            return;
+        }
         const mouth = document.querySelector('.mouth');
         mouth.style.height = '6px';
         mouth.style.width = '80px';
@@ -330,6 +336,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hilfsfunktion: Mund Standard (CSS .mouth)
     function setMouthStandard() {
+        if (isNightmare) {
+            setMouthAngst();
+            return;
+        }
         const mouth = document.querySelector('.mouth');
         mouth.removeAttribute('style');
     }
@@ -450,4 +460,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Timer beim Start setzen
     resetTiredInactivityTimer();
+
+    function setMouthAngst() {
+        const mouth = document.querySelector('.mouth');
+        mouth.style.height = '20px';
+        mouth.style.width = '80px';
+        mouth.style.borderRadius = '0 0 40px 40px';
+        mouth.style.background = 'none';
+        mouth.style.borderBottom = '3px solid #747474';
+        mouth.style.borderTop = 'none';
+        mouth.style.marginTop = '';
+        mouth.style.position = 'absolute';
+        mouth.style.bottom = '40px';
+        mouth.style.left = '50%';
+        mouth.style.transform = 'translateX(-50%) scaleY(-1)';
+        mouth.style.transition = 'all 0.5s ease';
+    }
+
+    // Fortschritt durch Streicheln im Albtraummodus auch auf Touch-Geräten
+    let isTouchingPet = false;
+    pet.addEventListener('touchstart', function(e) {
+        if (isNightmare) isTouchingPet = true;
+    });
+    pet.addEventListener('touchend', function(e) {
+        isTouchingPet = false;
+    });
+    pet.addEventListener('touchcancel', function(e) {
+        isTouchingPet = false;
+    });
+    document.addEventListener('touchmove', function(e) {
+        if (isNightmare && isTouchingPet) {
+            if (typeof increaseProgress === 'function') increaseProgress();
+        }
+    }, {passive: true});
 });
