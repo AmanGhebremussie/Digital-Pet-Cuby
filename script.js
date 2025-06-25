@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }, 50);
                 }
-                // Speed-Timer aufräumen
+                // Speed-Timer (aufräumen) 
                 if (window.nightmareSpeedTimeout) {
                     clearTimeout(window.nightmareSpeedTimeout);
                     window.nightmareSpeedTimeout = null;
@@ -629,3 +629,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
