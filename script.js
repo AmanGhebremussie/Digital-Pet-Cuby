@@ -556,7 +556,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fortschritt durch Streicheln im Albtraummodus auch auf Touch-Geräten
     let isTouchingPet = false;
     pet.addEventListener('touchstart', function(e) {
-        if (isNightmare) isTouchingPet = true;
+        if (isNightmare) {
+            isTouchingPet = true;
+            if (typeof increaseProgress === 'function') increaseProgress();
+        }
     });
     pet.addEventListener('touchend', function(e) {
         isTouchingPet = false;
@@ -564,11 +567,6 @@ document.addEventListener('DOMContentLoaded', () => {
     pet.addEventListener('touchcancel', function(e) {
         isTouchingPet = false;
     });
-    document.addEventListener('touchmove', function(e) {
-        if (isNightmare && isTouchingPet) {
-            if (typeof increaseProgress === 'function') increaseProgress();
-        }
-    }, {passive: true});
 
     function increaseProgress() {
         if (isNightmare && progressFill) {
