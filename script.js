@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let tiredTimeout = null;
 
 
+
     // Globale Variablen für Albtraum-Fortschritt
     let progress = 0;
     let maxProgress = 100;
